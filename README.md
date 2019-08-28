@@ -47,7 +47,7 @@ python 3.5
 PyTorch 1.1.0
 ```
 
-Fownload Data and BERT, and unzip them in the current directory.
+Download Data and BERT, and unzip them in the current directory.
 
 - [BERT][bert-model-link]: BERT Base Uncased in PyTorch
 - [Data][data-link]: Preprocessed open-domain QA datasets with paragraphs retrieved through TF-IDF and BM25 (details below).

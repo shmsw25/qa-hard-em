@@ -2,6 +2,7 @@ data=$1
 loss=$2
 bs=60
 pbs=600
+data_dir="preprocessed-open-domain-qa-data"
 
 if [ ${loss} = "hard-em" ]
 then
@@ -12,12 +13,12 @@ else
     tau=0
 fi
 
-train_file="open-domain-qa-data/${data}-train0.json"
+train_file="${data_dir}/${data}-train0.json"
 for index in 1 2 3 ; do
-    train_file="${train_file},open-domain-qa-data/${data}-train${index}.json"
+    train_file="${train_file},${data_dir}/${data}-train${index}.json"
 done
-dev_file="open-domain-qa-data/${data}-dev.json"
-test_file="open-domain-qa-data/${data}-test.json"
+dev_file="${data_dir}/${data}-dev.json"
+test_file="${data_dir}/${data}-test.json"
 
 python3 main.py --do_train --output_dir ${output_dir} \
           --train_file ${train_file} --predict_file ${dev_file} \

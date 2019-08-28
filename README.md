@@ -14,7 +14,7 @@ Sewon Min, Danqi Chen, Hannaneh Hajishirzi, Luke Zettlemoyer. [A Discrete Hard E
 
 ```
 
-You can use hard EM updates for any weakly-supervised QA task, using any model architecture. This is an example code for open-domain question answering using BERT QA model.
+You can use hard EM updates for any weakly-supervised QA task where precomputed solution set can be obtained, and can use any model architecture. This is an example code for open-domain question answering using BERT QA model.
 
 In the paper, we experiment on six QA datasets in three different categories.
 
@@ -50,7 +50,8 @@ PyTorch 1.1.0
 Download Data and BERT, and unzip them in the current directory.
 
 - [BERT][bert-model-link]: BERT Base Uncased in PyTorch
-- [Data][data-link]: Preprocessed open-domain QA datasets with paragraphs retrieved through TF-IDF and BM25 (details below).
+- [Preprocessed Data][preprocessed-data-link]: Preprocessed open-domain QA datasets with paragraphs retrieved through TF-IDF and BM25 (details below).
+- [Data][data-link]: Original data before preprocessing, which contains `id`, `question` and `answers` only (details below). This is not required for running the model, but just in case you need data before preprocessing.
 
 Then, you can do
 ```
@@ -67,18 +68,21 @@ Then, you can do
 ## Details about data
 Here we release preprocessed data and source for our experiments on two open-domain QA datasets, NaturalQuestions open-domain version ([Kwiatkowski et al 2019][nq-paper]) and TriviaQA-unfiltered ([Joshi et al 2017][triviaqa-paper]).
 
-For NaturalQuestions, follwoing [Lee et al 2019][kenton-paper], we take a subset of questions with short answers up to 5 tokens. You can download splitted data from [here][nq-split-data], where each line in the file contains
+For both datasets, we treat the dev set as the test set, and split the train set into 90/10 for training and development, following conventions that were also used in [Chen et al 2017][drqa-paper] and [Lee et al 2019][kenton-paper].
+For NaturalQuestions, follwoing [Lee et al 2019][kenton-paper], we take a subset of questions with short answers up to 5 tokens.
+
+You can download this data from [here][data-link]. Each datapoint contains
 - `id` a string, example id matching with the original data
 - `question`: a string
 - `answers`: a list of string
 
-To replicate the exact same data split process, please run `python3 split_nq.py {NQ_DATA_DIR}`, where `{NQ_DATA_DIR}` is the path to the directory to the original data.
 
-We retrieve paragraphs for each question through TF-IDF (for document retrieval; using DrQA from [Chen et al 2017][drqa-paper]) and BM25 (for further paragraph retrieval). We filter train examples where the retriever fails to retrieve any paragraph with the answer text. 
+For preprocessing, we retrieve paragraphs for each question through TF-IDF (for document retrieval; using DrQA from [Chen et al 2017][drqa-paper]) and BM25 (for further paragraph retrieval). We filter train examples where the retriever fails to retrieve any paragraph with the answer text. 
+Preprocessed data with retrieved paragraphs can be downloaded from [here][preprocessed-data-link].
 
-### How to use own data
+### How to use your own preprocessed data
 
-To use your own data, each line of the data file is a dictionary (can be decoded by json) containing
+To use your own data, each line of the data file should be a dictionary (can be decoded by json) containing
 - `id`: example id
 - `question`: question (string)
 - `context`: a list where each item is a tokenized paragraph (a list of list of string)
@@ -123,8 +127,8 @@ You can check the exact command line for training and evaluating the model in `r
 
 [paper-pdf-link]: TODO
 [bert-model-link]: https://drive.google.com/file/d/1XaMX-u5ZkWGH3f0gPrDtrBK1lKDU-QFk/view?usp=sharing
-[data-link]: https://drive.google.com/file/d/1zQOM0ujZx6RrCSfTJOo2Ehy92X96FI3X/view?usp=sharing
-[nq-split-data]: https://drive.google.com/file/d/1T_y-awwfltBVDwLYc12Lm5_9CTNrW7Oj/view?usp=sharing
+[data-link]: https://drive.google.com/file/d/1qsN5Oyi_OtT2LyaFZFH26vT8Sqjb89-s/view?usp=sharing
+[preprocessed-data-link]: https://drive.google.com/file/d/1FqTr6NzZf0CQ3FmA2dxF9R-2X0--CmBf/view?usp=sharing
 [nq-paper]: https://storage.googleapis.com/pub-tools-public-publication-data/pdf/1f7b46b5378d757553d3e92ead36bda2e4254244.pdf
 [kenton-paper]: https://arxiv.org/pdf/1906.00300.pdf
 [triviaqa-paper]: https://arxiv.org/pdf/1705.03551.pdf

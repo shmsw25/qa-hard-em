@@ -1,19 +1,56 @@
 # A Discrete Hard EM Approach for Weakly Supervised Question Answering
 
+This is the original implementation of the following paper.
+
+Sewon Min, Danqi Chen, Hannaneh Hajishirzi, Luke Zettlemoyer. [A Discrete Hard EM Approach for Weakly Supervised Question Answering][paper-pdf-link]. In: Proceedings of EMNLP (long). 2019
+
+```
+@inproceedings{ min2019discrete,
+  title={ A Discrete Hard EM Approach for Weakly Supervised Question Answering },
+  author={ Min, Sewon and Chen, Danqi and Hajishirzi, Hannaneh and Zettlemoyer, Luke },
+  booktitle={ EMNLP },
+  year={ 2019 }
+}
+
+```
+
+You can use hard EM updates for any weakly-supervised QA task, using any model architecture. This is an example code for open-domain question answering using BERT QA model.
+
+In the paper, we experiment on six QA datasets in three different categories.
+
+- Multi-mention reading comprehension
+    - Distantly-supervised reading comprehension: [TriviaQA][triviaqa-paper] 
+    - Reading comrepehension with free-form answers: [NarrativeQA][narrativeqa-paper]
+    - Open-domain QA: [TriviaQA-unfiltered][triviaqa-paper], [NaturalQuestions (open-domain version)][nq-paper]
+- Discrete Reasoning Task: [DROP][drop-paper]
+- Semantic Parsing: [WikiSQL][wikisql-paper]
 
 
+Below is the results reported in the paper (all on the test set).
 
 
+| Dataset | TriviaQA | NarrativeQA | TriviaQA-unfiltered | NaturalQuestions | DROP | WikiSQL |
+|---|---|---|---|---|---|---|
+| First-only | 64.9 | 57.4 | 48.1 | 23.6 | 42.9 | - |
+| MML | 65.5 | 56.1 | 47.4 | 25.8 | 39.7 | 70.5 |
+| Hard-EM (Ours) | 67.1 | **58.8** | **50.9** | **28.1** | **52.8** | **83.9** |
+| SOTA | **71.4** | 54.7 | 47.1 | 26.5 | 43.8 | 74.8 |
 
-You can use our hard EM updates for any weakly-supervised QA task, using any model architecture. This is an example code for open-domain question answering using BERT QA model.
+SOTA from [Wang et al 2018][triviaqa-sota-paper], [Nishida et al 2019][narrativeqa-sota-paper], [Lee et al 2019][kenton-paper], [Lee et al 2019][kenton-paper], [Dua et al][drop-paper] and [Agarwal et al 2019][wikisql-sota-paper], respectively.
+
 
 
 ## Quick Run on NQ and TriviaQA-unfiltered
 
-First, download Data and BERT, and unzip them in the current directory.
+```
+python 3.5
+PyTorch 1.1.0
+```
+
+Fownload Data and BERT, and unzip them in the current directory.
 
 - [BERT][bert-model-link]: BERT Base Uncased in PyTorch
-- [Data][data-link]: Preprocessed open-domain QA datasets with paragraphs retrieved through TF-IDF and BM25.
+- [Data][data-link]: Preprocessed open-domain QA datasets with paragraphs retrieved through TF-IDF and BM25 (details below).
 
 Then, you can do
 ```
@@ -28,16 +65,26 @@ Then, you can do
 ```
 
 ## Details about data
-We experiment on two open-domain QA datasets, NaturalQuestions open-domain version ([Kwiatkowski et al 2019][nq-paper], filtered by [Lee et al 2019][kenton-paper]) and TriviaQA-unfiltered ([Joshi et al 2017][triviaqa-paper]). We retrieve paragraphs for each question through TF-IDF (using Document Retriever from [Chen et al 2017][drqa-paper]) and BM25. We tokenizer them to be up to 300 tokens when splitted by BERT Tokenizer, which can be done optionally.
+Here we release preprocessed data and source for our experiments on two open-domain QA datasets, NaturalQuestions open-domain version ([Kwiatkowski et al 2019][nq-paper]) and TriviaQA-unfiltered ([Joshi et al 2017][triviaqa-paper]).
+
+For NaturalQuestions, follwoing [Lee et al 2019][kenton-paper], we take a subset of questions with short answers up to 5 tokens. You can download splitted data from [here][nq-split-data], where each line in the file contains
+- `id` a string, example id matching with the original data
+- `question`: a string
+- `answers`: a list of string
+
+To replicate the exact same data split process, please run `python3 split_nq.py {NQ_DATA_DIR}`, where `{NQ_DATA_DIR}` is the path to the directory to the original data.
+
+We retrieve paragraphs for each question through TF-IDF (for document retrieval; using DrQA from [Chen et al 2017][drqa-paper]) and BM25 (for further paragraph retrieval). We filter train examples where the retriever fails to retrieve any paragraph with the answer text. 
+
+### How to use own data
 
 To use your own data, each line of the data file is a dictionary (can be decoded by json) containing
 - `id`: example id
 - `question`: question (string)
 - `context`: a list where each item is a tokenized paragraph (a list of list of string)
 - `answers`: a list where i-th item is an answer entry in i-th paragraph of `context`; answer entry is a dictionary containing
-          - `text`: answer text
-          - `word_start`: index of the first answer word in the paragraph
-          - `word_end`: index of the last answer word in the paragraph
+          (1) `text`: answer text
+          (2) `word_start`/`word_end`: index of the first/last answer word in the paragraph
 - `final_answers`: a list of answer texts for evaluation; `text` in `answers` are always included in `final_answers`
 
 Example:
@@ -73,53 +120,21 @@ You can check the exact command line for training and evaluating the model in `r
 - `--verbose`: specify to see progress bar for loading data, training and evaluating
 
 
-## Summary of the results
 
-In the paper, we experiment on six different QA tasks. Below is the results reported in the paper (all on the test set).
-
-
-| Dataset | TriviaQA | NarrativeQA | TriviaQA-unfiltered | NaturalQuestions | DROP | WikiSQL |
-|---|---|---|---|---|---|---|
-| First-only | 64.9 | 57.4 | 48.1 | 23.6 | 42.9 | - |
-| MML | 65.5 | 56.1 | 47.4 | 25.8 | 39.7 | 70.5 |
-| Hard-EM (Ours) | 67.1 | **58.8** | **50.9** | **28.1** | **52.8** | **83.9** |
-| SOTA | **71.4** | 54.7 | 47.1 | 26.5 | 43.8 | 74.8 |
-
-(SOTA are from [Wang et al 2018][triviaqa-sota-paper], [Nishida et al 2019][narrativeqa-sota-paper], [Lee et al 2019][kenton-paper], [Lee et al 2019][kenton-paper], [Dua et al][drop-paper] and [Agarwal et al 2019][wikisql-sota-paper], respectively.
-
+[paper-pdf-link]: TODO
 [bert-model-link]: https://drive.google.com/file/d/1XaMX-u5ZkWGH3f0gPrDtrBK1lKDU-QFk/view?usp=sharing
-[data-link]()
-[nq-paper]: []
-[kenton-paper]: []
-[triviaqa-paper]: []
-[drqa-paper]:
-[acl-paper]:
-[triviaqa-sota-paper]:
-[narrativeqa-sota-paper]:
-[drop-paper]:
-[wikisql-sota-paper]:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+[data-link]: https://drive.google.com/file/d/1zQOM0ujZx6RrCSfTJOo2Ehy92X96FI3X/view?usp=sharing
+[nq-split-data]: https://drive.google.com/file/d/1T_y-awwfltBVDwLYc12Lm5_9CTNrW7Oj/view?usp=sharing
+[nq-paper]: https://storage.googleapis.com/pub-tools-public-publication-data/pdf/1f7b46b5378d757553d3e92ead36bda2e4254244.pdf
+[kenton-paper]: https://arxiv.org/pdf/1906.00300.pdf
+[triviaqa-paper]: https://arxiv.org/pdf/1705.03551.pdf
+[drqa-paper]: https://arxiv.org/pdf/1704.00051.pdf
+[acl-paper]: https://arxiv.org/pdf/1906.02900.pdf
+[triviaqa-sota-paper]: https://aclweb.org/anthology/P18-1158
+[narrativeqa-sota-paper]: https://arxiv.org/pdf/1901.02262.pdf
+[drop-paper]: https://arxiv.org/pdf/1903.00161.pdf
+[wikisql-sota-paper]: https://arxiv.org/pdf/1902.07198.pdf
+[narrativeqa-paper]: https://arxiv.org/pdf/1712.07040.pdf
+[wikisql-paper]: https://arxiv.org/pdf/1709.00103.pdf
 
 

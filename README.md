@@ -40,7 +40,7 @@ SOTA from [Wang et al 2018][triviaqa-sota-paper], [Nishida et al 2019][narrative
 
 
 
-## Quick Run on NQ and TriviaQA-unfiltered
+## Quick Run on open-domain QA
 
 ```
 python 3.5
@@ -51,14 +51,14 @@ Download Data and BERT, and unzip them in the current directory.
 
 - [BERT][bert-model-link]: BERT Base Uncased in PyTorch
 - [Preprocessed Data][preprocessed-data-link]: Preprocessed open-domain QA datasets with paragraphs retrieved through TF-IDF and BM25 (details below).
-- [Data][data-link]: Original data before preprocessing, which contains `id`, `question` and `answers` only (details below). This is not required for running the model, but just in case you need data before preprocessing.
+- [Data][data-link]: Original data before preprocessing, which contains `id`, `question` and `answers` only (details below). This is not required for running the model, but just in case you want data before preprocessing.
 
 Then, you can do
 ```
 # NQ
 ./run.sh nq first-only
 ./run.sh nq mml
-./run.sh nq hard-em 4000
+./run.sh nq hard-em 8000
 # TriviaQA
 ./run.sh triviaqa first-only
 ./run.sh triviaqa mml
@@ -77,7 +77,7 @@ You can download this data from [here][data-link]. Each datapoint contains
 - `answers`: a list of string
 
 
-For preprocessing, we retrieve paragraphs for each question through TF-IDF (for document retrieval; using DrQA from [Chen et al 2017][drqa-paper]) and BM25 (for further paragraph retrieval). We filter train examples where the retriever fails to retrieve any paragraph with the answer text. 
+For preprocessing, we retrieve paragraphs for each question through TF-IDF (for document retrieval; using DrQA from [Chen et al 2017][drqa-paper]) and BM25 (for further paragraph retrieval). We filter train examples where the retriever fails to retrieve any paragraph with the answer text.
 Preprocessed data with retrieved paragraphs can be downloaded from [here][preprocessed-data-link].
 
 ### How to use your own preprocessed data
@@ -104,16 +104,16 @@ Example:
 }
 ```
 
-## Details abou the model
-The model architecture is exactly same as [Min et al 2019][acl-paper]. We only modify loss functions to have different variations.
+## Details about the model
+The model architecture is exactly same as [Min et al 2019][acl-paper]'s model. We only modify loss functions to have different variations.
 You can check the exact command line for training and evaluating the model in `run.sh`. Some useful flags are as follows.
 
 - `--train_batch_size`: batch size for training; experiments reported in the paper use batch size of 192
 - `--predict_batch_size`: batch size for evaluating
 - `--loss_type`: learning method, one of
-            - `first-only`: only considering answer span appearing earliest in the paragraph
-            - `mml`: maximum marginal likelihood objective
-            - `hard-em`: hard em objective (our main objective)
+            (i) `first-only` which only considers the first answer span,
+            (ii) `mml` which uses maximum marginal likelihood objective, and
+            (iii) `hard-em` which uses hard em objective (our main objective)
 - `--tau`: hyperparameters for hard-em objective; only matters when `loss_type` is `hard-em`; experiments reported in the paper use 4000 for TriviaQA-unfiltered and 8000 for NaturalQuestions
 - `--init_checkpoint`: model checkpoint to load; for training, it should be BERT checkpoint; for evaluating, it should be trained model
 - `--output_dir`: directory to store trained model and predictions
@@ -123,7 +123,9 @@ You can check the exact command line for training and evaluating the model in `r
 - `--prefix`: prefix when storing predictions during evaluation
 - `--verbose`: specify to see progress bar for loading data, training and evaluating
 
+## Contact
 
+For any question, please contact [Sewon Min](https://shmsw25.github.io) or post Github issue.
 
 [paper-pdf-link]: TODO
 [bert-model-link]: https://drive.google.com/file/d/1XaMX-u5ZkWGH3f0gPrDtrBK1lKDU-QFk/view?usp=sharing

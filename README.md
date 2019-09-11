@@ -14,14 +14,14 @@ Sewon Min, Danqi Chen, Hannaneh Hajishirzi, Luke Zettlemoyer. [A Discrete Hard E
 
 ```
 
-You can use hard EM updates for any weakly-supervised QA task where precomputed solution set can be obtained, and can use any model architecture. This is an example code for open-domain question answering using BERT QA model.
+You can use hard EM updates for any weakly-supervised QA task where precomputed solution set can be obtained, and can use with any model architecture. This is an example code for open-domain question answering using BERT QA model.
 
 In the paper, we experiment on six QA datasets in three different categories.
 
 - Multi-mention reading comprehension
     - Distantly-supervised reading comprehension: [TriviaQA][triviaqa-paper] 
     - Reading comrepehension with free-form answers: [NarrativeQA][narrativeqa-paper]
-    - Open-domain QA: [TriviaQA-unfiltered][triviaqa-paper], [NaturalQuestions (open-domain version)][nq-paper]
+    - Open-domain QA: [TriviaQA-open][triviaqa-paper], [NaturalQuestions-open][nq-paper]
 - Discrete Reasoning Task: [DROP][drop-paper]
 - Semantic Parsing: [WikiSQL][wikisql-paper]
 
@@ -29,7 +29,7 @@ In the paper, we experiment on six QA datasets in three different categories.
 Below is the results reported in the paper (all on the test set).
 
 
-| Dataset | TriviaQA | NarrativeQA | TriviaQA-unfiltered | NaturalQuestions | DROP | WikiSQL |
+| Dataset | TriviaQA | NarrativeQA | TriviaQA-open | NaturalQuestions-open | DROP | WikiSQL |
 |---|---|---|---|---|---|---|
 | First-only | 64.9 | 57.4 | 48.1 | 23.6 | 42.9 | - |
 | MML | 65.5 | 56.1 | 47.4 | 25.8 | 39.7 | 70.5 |
@@ -66,7 +66,7 @@ Then, you can do
 ```
 
 ## Details about data
-Here we release preprocessed data and source for our experiments on two open-domain QA datasets, NaturalQuestions open-domain version ([Kwiatkowski et al 2019][nq-paper]) and TriviaQA-unfiltered ([Joshi et al 2017][triviaqa-paper]).
+Here we release preprocessed data and source for our experiments on two open-domain QA datasets, NaturalQuestions-open ([Kwiatkowski et al 2019][nq-paper]) and TriviaQA-open ([Joshi et al 2017][triviaqa-paper]).
 
 For both datasets, we treat the dev set as the test set, and split the train set into 90/10 for training and development, following conventions that were also used in [Chen et al 2017][drqa-paper] and [Lee et al 2019][kenton-paper].
 For NaturalQuestions, follwoing [Lee et al 2019][kenton-paper], we take a subset of questions with short answers up to 5 tokens.

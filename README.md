@@ -14,7 +14,9 @@ Sewon Min, Danqi Chen, Hannaneh Hajishirzi, Luke Zettlemoyer. [A Discrete Hard E
 
 ```
 
-You can use hard EM updates for any weakly-supervised QA task where precomputed solution set can be obtained, and can use with any model architecture. This is an example code for open-domain question answering using BERT QA model.
+You can use hard EM updates for any weakly-supervised QA task where a precomputed solution set can be obtained, and can use with any model architecture. This is an example code for open-domain question answering using BERT QA model. The base code is from [Huggingface's Pytorch-Transformers](https://github.com/huggingface/pytorch-transformers).
+
+*Codes for other tasks are coming soon, stay tuned!*
 
 In the paper, we experiment on six QA datasets in three different categories.
 
@@ -127,7 +129,7 @@ You can check the exact command line for training and evaluating the model in `r
 
 For any question, please contact [Sewon Min](https://shmsw25.github.io) or post Github issue.
 
-[paper-pdf-link]: TODO
+[paper-pdf-link]: https://arxiv.org/abs/1909.04849
 [bert-model-link]: https://drive.google.com/file/d/1XaMX-u5ZkWGH3f0gPrDtrBK1lKDU-QFk/view?usp=sharing
 [data-link]: https://drive.google.com/file/d/1qsN5Oyi_OtT2LyaFZFH26vT8Sqjb89-s/view?usp=sharing
 [preprocessed-data-link]: https://drive.google.com/file/d/1FqTr6NzZf0CQ3FmA2dxF9R-2X0--CmBf/view?usp=sharing

@@ -21,7 +21,7 @@ You can use hard EM updates for any weakly-supervised QA task where a precompute
 In the paper, we experiment on six QA datasets in three different categories.
 
 - Multi-mention reading comprehension
-    - Distantly-supervised reading comprehension: [TriviaQA][triviaqa-paper] 
+    - Distantly-supervised reading comprehension: [TriviaQA][triviaqa-paper]
     - Reading comrepehension with free-form answers: [NarrativeQA][narrativeqa-paper]
     - Open-domain QA: [TriviaQA-open][triviaqa-paper], [NaturalQuestions-open][nq-paper]
 - Discrete Reasoning Task: [DROP][drop-paper]
@@ -47,6 +47,7 @@ SOTA from [Wang et al 2018][triviaqa-sota-paper], [Nishida et al 2019][narrative
 ```
 python 3.5
 PyTorch 1.1.0
+Tensorflow (tested on TF 1.3.0, only for tokenization)
 ```
 
 Download Data and BERT, and unzip them in the current directory.

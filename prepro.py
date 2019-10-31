@@ -31,7 +31,6 @@ def get_dataloader(logger, args, input_file, is_training, \
         with open(feature_save_path, 'rb') as f:
             features = pkl.load(f)
             train_features = features['features']
-            rel_features = features['rel_features']
             examples = features.get('examples', None)
     else:
 
@@ -50,7 +49,7 @@ def get_dataloader(logger, args, input_file, is_training, \
             is_training=is_training)
         if not args.debug:
             logger.info("Saving features to: {}".format(feature_save_path))
-            save_features = {'features': train_features, 'rel_features': rel_features}
+            save_features = {'features': train_features}
             if not is_training:
                 save_features['examples'] = examples
             with open(feature_save_path, 'wb') as f:

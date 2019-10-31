@@ -1,7 +1,7 @@
 data=$1
 loss=$2
-bs=192
-pbs=2000
+bs=48
+pbs=96
 data_dir="preprocessed-open-domain-qa-data"
 
 if [ ${loss} = "hard-em" ]

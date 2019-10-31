@@ -456,6 +456,5 @@ class BertForQuestionAnswering(nn.Module):
             loss_tensor + 2*torch.max(loss_tensor)*(loss_tensor==0).type(torch.FloatTensor).to(self.device), 1)[0])
 
     def _take_mml(self, loss_tensor):
-        return torch.sum(torch.log(torch.sum(torch.exp(
-                loss_tensor - 1e10 * (loss_tensor==0).float()), 1)))
+        return -torch.sum(torch.log(torch.sum(torch.exp(-loss_tensor - 1e10 * (loss_tensor==0).float()), 1)))
 

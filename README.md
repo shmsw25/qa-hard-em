@@ -47,7 +47,6 @@ SOTA from [Wang et al 2018][triviaqa-sota-paper], [Nishida et al 2019][narrative
 ```
 python 3.5
 PyTorch 1.1.0
-Tensorflow (tested on TF 1.3.0, only for tokenization)
 ```
 
 Download Data and BERT, and unzip them in the current directory.

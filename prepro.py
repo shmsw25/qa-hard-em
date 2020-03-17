@@ -141,6 +141,8 @@ def read_squad_examples(logger, args, input_file, debug):
                 start_position=start_positions_list,
                 end_position=end_positions_list,
                 switch=switches_list))
+    if "test" in input_file:
+        return examples
     n_answers = []
     for example in examples:
         has_answer=False

@@ -187,6 +187,7 @@ def write_predictions(logger, all_examples, all_features, all_results, n_best_si
                 nbest_json = get_nbest_json([pred for pred in prelim_predictions if \
                                              pred.paragraph_index<n])
                 all_predictions[example.qas_id].append(nbest_json[0]["text"])
+            all_predictions[example.qas_id].append(example.all_answers)
 
     if write_prediction:
         logger.info("Writing predictions to: %s" % (output_prediction_file))
